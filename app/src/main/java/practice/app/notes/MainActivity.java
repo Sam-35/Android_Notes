@@ -30,15 +30,22 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ListView listView = (ListView) findViewById(R.id.listView_notes);
 
+        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("123", Context.MODE_PRIVATE);
+        HashSet<String> set = (HashSet<String>) sharedPreferences.getStringSet("notes", null);
 
-        final ListView listView_notes = (ListView) findViewById(R.id.listView_notes);
+        if(set == null){
+            list_notes.add("Example note");
+        }else{
+            list_notes = new ArrayList(set);
+        }
+
         arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, list_notes);
-        listView_notes.setAdapter(arrayAdapter);
+        listView.setAdapter(arrayAdapter);
 
-        list_notes.add("sample note");
 
-        listView_notes.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(getApplicationContext(), NoteEditorActivity.class);
@@ -46,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-        listView_notes.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
                 new AlertDialog.Builder(MainActivity.this).setIcon(android.R.drawable.ic_dialog_alert)
